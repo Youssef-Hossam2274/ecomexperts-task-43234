@@ -27,19 +27,15 @@ export const productQty = (state: BundleState, product: Product): number => {
   );
 };
 
-/** Distinct products with qty > 0 in a step's category (excludes the
- *  standalone shipping row). Drives the "N selected" indicator. */
+/** Distinct products with qty > 0 in a step's category. Drives the
+ *  "N selected" indicator. */
 export const stepSelectedCount = (
   state: BundleState,
   category: CategoryId,
   products: Product[],
 ): number =>
-  products.filter(
-    (p) =>
-      p.category === category &&
-      p.display !== "shipping" &&
-      productQty(state, p) > 0,
-  ).length;
+  products.filter((p) => p.category === category && productQty(state, p) > 0)
+    .length;
 
 export interface SummaryLine {
   key: LineKey;
@@ -54,7 +50,7 @@ export interface SummaryLine {
   required?: boolean;
   noStepper?: boolean;
   cadence?: "once" | "monthly";
-  display?: "plan" | "shipping";
+  display?: "plan";
 }
 
 /** Every selected variant becomes its own review line. When a product has
@@ -101,7 +97,8 @@ function linesForProduct(state: BundleState, product: Product): SummaryLine[] {
 }
 
 /** Review-panel line items grouped by category (in catalog order). Empty
- *  groups are dropped; the shipping row is surfaced separately. */
+ *  groups are dropped; the shipping row is surfaced separately from the
+ *  catalog's `shipping` field, not from `products`. */
 export function summaryGroups(
   state: BundleState,
   products: Product[],
@@ -111,20 +108,11 @@ export function summaryGroups(
     .map((cat) => ({
       ...cat,
       lines: products
-        .filter((p) => p.category === cat.id && p.display !== "shipping")
+        .filter((p) => p.category === cat.id)
         .flatMap((p) => linesForProduct(state, p)),
     }))
     .filter((group) => group.lines.length > 0);
 }
-
-export const shippingLine = (
-  state: BundleState,
-  products: Product[],
-): SummaryLine | null => {
-  const shipping = products.find((p) => p.display === "shipping");
-  if (!shipping) return null;
-  return linesForProduct(state, shipping)[0] ?? null;
-};
 
 export interface Totals {
   subtotal: number; // pre-discount (struck through)
@@ -132,13 +120,13 @@ export interface Totals {
   savings: number;
 }
 
-/** Grand totals. Shipping is excluded (it carries its own row); everything
- *  else — including the monthly plan — is summed, matching the Figma. */
+/** Grand totals across every product — the always-free shipping row isn't a
+ *  product, so it's never part of this sum; it carries its own row and its
+ *  own (always-zero) contribution to the total, matching the Figma. */
 export function computeTotals(state: BundleState, products: Product[]): Totals {
   let subtotal = 0;
   let total = 0;
   for (const product of products) {
-    if (product.display === "shipping") continue;
     const qty = product.noStepper
       ? productQtyOrOne(state, product)
       : productQty(state, product);

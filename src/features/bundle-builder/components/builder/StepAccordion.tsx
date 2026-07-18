@@ -11,12 +11,11 @@ import { ProductCard } from "./ProductCard";
 import { StepProductList } from "./StepProductList";
 
 /** Products rendered inside a step: camera cards for step 1, the category's
- *  configurable items (shipping excluded) for the rest. */
+ *  configurable items for the rest. */
 const stepProducts = (step: Step, products: Product[]) =>
   products.filter(
     (p) =>
       p.category === step.category &&
-      p.display !== "shipping" &&
       (step.category === "cameras" ? p.display === undefined : true),
   );
 

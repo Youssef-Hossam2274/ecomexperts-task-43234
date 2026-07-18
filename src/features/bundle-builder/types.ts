@@ -45,8 +45,19 @@ export interface Product {
   required?: boolean;
   /** This product has no quantity control in the review panel. */
   noStepper?: boolean;
-  /** Special renderers for the odd-one-out review rows. */
-  display?: "plan" | "shipping";
+  /** Renders the special "Cam Unlimited" plan row treatment. */
+  display?: "plan";
+}
+
+/** The always-on "Fast Shipping" review row. Not a selectable product — no
+ *  id, quantity, or variants — so it's its own top-level catalog field
+ *  rather than an entry in `products`. Rendered with a client-side icon
+ *  (see `Icon name="shipping"`) instead of a catalog image. */
+export interface ShippingInfo {
+  name: string;
+  price: number;
+  compareAt?: number;
+  free?: boolean;
 }
 
 export interface Step {
@@ -68,6 +79,8 @@ export interface ProductCatalog {
   /** Seed quantities keyed by `${productId}:${variantId}` (variant id
    *  "default" for products with no colour options). */
   seed: Record<string, number>;
+  /** The always-on shipping row — see {@link ShippingInfo}. */
+  shipping: ShippingInfo;
   /** Static financing string shown in the summary. */
   financingLabel: string;
 }

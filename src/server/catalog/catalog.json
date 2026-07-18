@@ -142,17 +142,6 @@
       "cadence": "monthly",
       "noStepper": true,
       "display": "plan"
-    },
-    {
-      "id": "fast-shipping",
-      "category": "accessories",
-      "name": "Fast Shipping",
-      "image": "/assets/products/shipping.png",
-      "price": 0,
-      "compareAt": 5.99,
-      "free": true,
-      "noStepper": true,
-      "display": "shipping"
     }
   ],
   "seed": {
@@ -161,8 +150,13 @@
     "motion-sensor:default": 2,
     "sense-hub:default": 1,
     "microsd-256:default": 2,
-    "cam-unlimited:default": 1,
-    "fast-shipping:default": 1
+    "cam-unlimited:default": 1
+  },
+  "shipping": {
+    "name": "Fast Shipping",
+    "price": 0,
+    "compareAt": 5.99,
+    "free": true
   },
   "financingLabel": "as low as $19.19/mo"
 }

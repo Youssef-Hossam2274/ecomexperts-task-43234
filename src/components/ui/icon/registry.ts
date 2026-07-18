@@ -6,15 +6,17 @@ import { ExtraProtection } from "./generated/ExtraProtection";
 import { Minus } from "./generated/Minus";
 import { Plan } from "./generated/Plan";
 import { Sensor } from "./generated/Sensor";
+import { Shipping } from "./generated/Shipping";
 
 export const ICONS = {
-  "add": Add,
-  "camera": Camera,
+  add: Add,
+  camera: Camera,
   "carrot-down": CarrotDown,
   "extra-protection": ExtraProtection,
-  "minus": Minus,
-  "plan": Plan,
-  "sensor": Sensor,
+  minus: Minus,
+  plan: Plan,
+  sensor: Sensor,
+  shipping: Shipping,
 } as const;
 
 export type IconName = keyof typeof ICONS;

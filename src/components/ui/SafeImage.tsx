@@ -50,14 +50,14 @@ export function SafeImage({
       )}
     >
       {failed ? (
-        fallback ?? (
+        (fallback ?? (
           <span
             aria-hidden
             className="flex h-full w-full items-center justify-center bg-gray-200 text-[8px] font-medium tracking-wide text-gray-500"
           >
             IMG
           </span>
-        )
+        ))
       ) : (
         <Image
           src={src}
