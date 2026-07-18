@@ -50,7 +50,7 @@ const variantStyles: Record<
   card: {
     container: "inline-flex items-center gap-2",
     minus: {
-      base: cn(BOX, "border-2 bg-white"),
+      base: cn(BOX, "border-2 bg-white cursor-pointer"),
       active: "border-gray-300 text-ink hover:bg-gray-200",
       off: "cursor-not-allowed border-gray-300 text-gray-400",
       locked: "cursor-not-allowed border-gray-300 text-gray-400",
@@ -86,6 +86,7 @@ function pickState(
   s: ButtonStyle,
   { locked, off }: { locked: boolean; off: boolean },
 ): string {
+  const activeClasses = "cursor-pointer " + s.active;
   return cn(s.base, locked ? s.locked : off ? s.off : s.active);
 }
 

@@ -1,0 +1,168 @@
+{
+  "products": [
+    {
+      "id": "cam-v4",
+      "category": "cameras",
+      "name": "Wyze Cam v4",
+      "description": "The clearest Wyze Cam ever made.",
+      "learnMoreHref": "#",
+      "badge": "Save 22%",
+      "image": "/assets/products/cam-v4.png",
+      "price": 27.98,
+      "compareAt": 35.98,
+      "variants": [
+        {
+          "id": "white",
+          "label": "White",
+          "hex": "#ffffff",
+          "highlightBorder": true
+        },
+        {
+          "id": "grey",
+          "label": "Grey",
+          "hex": "#9aa0a6"
+        },
+        {
+          "id": "black",
+          "label": "Black",
+          "hex": "#1f1f1f"
+        }
+      ]
+    },
+    {
+      "id": "cam-pan-v3",
+      "category": "cameras",
+      "name": "Wyze Cam Pan v3",
+      "description": "360° pan and 180° tilt security camera.",
+      "learnMoreHref": "#",
+      "badge": "Save 12%",
+      "image": "/assets/products/cam-pan-v3.png",
+      "price": 23.99,
+      "compareAt": 28.99,
+      "variants": [
+        {
+          "id": "white",
+          "label": "White",
+          "hex": "#ffffff",
+          "highlightBorder": true
+        },
+        {
+          "id": "black",
+          "label": "Black",
+          "hex": "#1f1f1f"
+        }
+      ]
+    },
+    {
+      "id": "floodlight-v2",
+      "category": "cameras",
+      "name": "Wyze Cam Floodlight v2",
+      "description": "2K floodlight camera with a 160° wide-angle view for your garage.",
+      "learnMoreHref": "#",
+      "badge": "Save 22%",
+      "image": "/assets/products/floodlight-v2.png",
+      "price": 69.98,
+      "compareAt": 89.98,
+      "variants": [
+        {
+          "id": "white",
+          "label": "White",
+          "hex": "#ffffff",
+          "highlightBorder": true
+        },
+        {
+          "id": "black",
+          "label": "Black",
+          "hex": "#1f1f1f"
+        }
+      ]
+    },
+    {
+      "id": "duo-doorbell",
+      "category": "cameras",
+      "name": "Wyze Duo Cam Doorbell",
+      "description": "Two cameras. Two views. Double the porch protection.",
+      "learnMoreHref": "#",
+      "image": "/assets/products/duo-doorbell.png",
+      "price": 69.98
+    },
+    {
+      "id": "battery-cam-pro",
+      "category": "cameras",
+      "name": "Wyze Battery Cam Pro",
+      "description": "Protect anywhere. See everything in 2.5K HDR. No power outlet or electrician needed.",
+      "learnMoreHref": "#",
+      "image": "/assets/products/battery-cam-pro.png",
+      "price": 89.98,
+      "variants": [
+        {
+          "id": "white",
+          "label": "White",
+          "hex": "#ffffff",
+          "highlightBorder": true
+        },
+        {
+          "id": "black",
+          "label": "Black",
+          "hex": "#1f1f1f"
+        }
+      ]
+    },
+    {
+      "id": "motion-sensor",
+      "category": "sensors",
+      "name": "Wyze Sense Motion Sensor",
+      "image": "/assets/products/motion-sensor.png",
+      "price": 29.99
+    },
+    {
+      "id": "sense-hub",
+      "category": "sensors",
+      "name": "Wyze Sense Hub (Required)",
+      "image": "/assets/products/sense-hub.png",
+      "price": 0,
+      "compareAt": 29.92,
+      "free": true,
+      "required": true
+    },
+    {
+      "id": "microsd-256",
+      "category": "accessories",
+      "name": "Wyze MicroSD Card (256GB)",
+      "image": "/assets/products/microsd-256.png",
+      "price": 20.98
+    },
+    {
+      "id": "cam-unlimited",
+      "category": "plan",
+      "name": "Cam Unlimited",
+      "image": "/assets/products/cam-plus-logo.svg",
+      "price": 9.99,
+      "compareAt": 12.99,
+      "cadence": "monthly",
+      "noStepper": true,
+      "display": "plan"
+    },
+    {
+      "id": "fast-shipping",
+      "category": "accessories",
+      "name": "Fast Shipping",
+      "image": "/assets/products/shipping.png",
+      "price": 0,
+      "compareAt": 5.99,
+      "free": true,
+      "noStepper": true,
+      "display": "shipping"
+    }
+  ],
+  "seed": {
+    "cam-v4:white": 1,
+    "cam-pan-v3:white": 2,
+    "motion-sensor:default": 2,
+    "sense-hub:default": 1,
+    "microsd-256:default": 2,
+    "cam-unlimited:default": 1,
+    "fast-shipping:default": 1
+  },
+  "financingLabel": "as low as $19.19/mo"
+}
