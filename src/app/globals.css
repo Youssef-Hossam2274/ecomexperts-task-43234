@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ */
+/*  Design tokens (captured from Figma — see                          */
+/*  src/features/bundle-builder/DESIGN.md)                            */
+/* ------------------------------------------------------------------ */
+@theme {
+  /* Brand */
+  --color-wyze-purple: #4e2fd2;
+  --color-wyze-purple-70: rgba(78, 47, 210, 0.7);
+
+  /* Neutrals (Gray-C scale) */
+  --color-obsidian: #0b0d10;
+  --color-ink: #1f1f1f;
+  --color-gray-700: #525963;
+  --color-gray-600: #6f7882;
+  --color-gray-500: #a8b2bd;
+  --color-gray-400: #ced6de;
+  --color-gray-300: #e6ebf0;
+  --color-gray-200: #f0f4f7;
+
+  /* Utility */
+  --color-price: #575757;
+  --color-step-label: #484848;
+  --color-strike-red: #d8392b;
+  --color-save-green: #0aa288;
+  --color-panel: #edf4ff;
+  --color-link-blue: #0000ee;
+
+  /* Fonts — single app-wide typeface, wired in app/layout.tsx. */
+  --font-sans: var(--font-primary);
+  --font-display: var(--font-primary);
+
+  /* Radii */
+  --radius-panel: 10px;
+  --radius-chip: 2px;
+  --radius-step: 4px;
+  --radius-next: 7px;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: var(--color-ink);
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-primary), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Strikethrough that keeps its own color regardless of surrounding text */
+.line-through-inherit {
+  text-decoration-line: line-through;
+}
