@@ -1,7 +1,7 @@
 "use client";
 
+import { Icon } from "@/src/components/ui/icon";
 import { cn } from "@/src/lib/cn";
-import { Minus, Plus } from "./icons";
 
 interface QtyStepperProps {
   value: number;
@@ -132,7 +132,7 @@ export function QtyStepper({
         aria-label="Decrease quantity"
         className={minusClass}
       >
-        <Minus className="size-2" />
+        <Icon name="minus" color="currentColor" className="size-2" />
       </button>
 
       <span
@@ -149,7 +149,7 @@ export function QtyStepper({
         aria-label="Increase quantity"
         className={plusClass}
       >
-        <Plus className="size-2" />
+        <Icon name="add" color="currentColor" className="size-2" />
       </button>
     </div>
   );
