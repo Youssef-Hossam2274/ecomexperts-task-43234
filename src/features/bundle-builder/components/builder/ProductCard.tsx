@@ -66,6 +66,7 @@ export function ProductCard({
           <SafeImage
             src={product.image}
             alt={product.name}
+            className="object-contain @min-[280px]:object-cover"
             wrapperClassName="h-full w-full @min-[280px]:h-[110px]"
           />
         </div>

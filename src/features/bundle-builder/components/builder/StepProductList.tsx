@@ -35,6 +35,7 @@ export function StepProductList({ products }: { products: Product[] }) {
               wrapperClassName={`size-12 shrink-0 rounded-[6px] ${
                 isPlan ? "" : "bg-gray-200"
               }`}
+              className="object-contain"
             />
             <div className="min-w-0 flex-1">
               {isPlan ? (

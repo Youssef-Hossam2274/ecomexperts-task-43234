@@ -42,6 +42,13 @@ export function SafeImage({
 }: SafeImageProps) {
   const [failed, setFailed] = useState(false);
 
+  // `cn` is a plain join (no tailwind-merge), so both `object-*` utilities would
+  // survive and stylesheet order — not source order — would decide the winner.
+  // Drop our default when the caller sets a base `object-fit` so theirs wins.
+  const overridesObjectFit =
+    !!className &&
+    /(^|\s)object-(contain|cover|fill|none|scale-down)(\s|$)/.test(className);
+
   return (
     <span
       className={cn(
@@ -64,7 +71,7 @@ export function SafeImage({
           alt={alt}
           fill
           sizes={sizes}
-          className={cn("object-contain", className)}
+          className={cn(!overridesObjectFit && "object-cover", className)}
           onError={() => setFailed(true)}
         />
       )}
