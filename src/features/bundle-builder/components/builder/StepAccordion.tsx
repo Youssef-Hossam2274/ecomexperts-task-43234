@@ -61,9 +61,17 @@ export function StepAccordion() {
               //                  the "review at the bottom" full-width layout)
               //   >=2xl          2-up → medium card → horizontal (Figma 68-9791,
               //                  the "review on the right" sidebar layout)
-              <div className="grid grid-cols-1 gap-[15px] md:grid-cols-2 lg:grid-cols-5 2xl:grid-cols-2">
+              // Flex wrap instead of a grid so a short final row (fewer items
+              // than the columns above) stays centered rather than left-aligned.
+              // The per-card `basis` reproduces the old column counts exactly
+              // (1 / 2 / 5 / 2), so full rows still line up edge-to-edge.
+              <div className="flex flex-wrap justify-center gap-[15px]">
                 {items.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    className="basis-full md:basis-[calc((100%_-_15px)/2)] lg:basis-[calc((100%_-_60px)/5)] 2xl:basis-[calc((100%_-_15px)/2)]"
+                  />
                 ))}
               </div>
             ) : (
