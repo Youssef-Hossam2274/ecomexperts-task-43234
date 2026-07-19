@@ -1,144 +1,187 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Bundle Builder
 
-## Getting Started
+A **Wyze security-system bundle builder** — a two-column shopping experience built as a
+React prototype. On the left, a 4-step accordion walks the shopper through assembling a
+system (cameras → plan → sensors → extra protection); on the right, a live "Your security
+system" review panel reflects every selection, recalculates the total, and offers checkout.
 
-First, run the development server:
+Built with **Next.js 16 (App Router) + React 19** and **Tailwind CSS v4**. Everything is
+**data-driven from a JSON catalog** served by a small simulated backend (the optional bonus).
+
+> Task spec: see [`REQUIREMENTS.md`](./REQUIREMENTS.md). Design capture: [`src/features/bundle-builder/DESIGN.md`](./src/features/bundle-builder/DESIGN.md).
+
+---
+
+## Run it
+
+**Requirements:** Node **20+** (developed on Node 24) and npm.
+
+From a clean clone:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install      # install dependencies
+npm run dev      # start the dev server
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open **[http://localhost:3000](http://localhost:3000)**.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Production build
 
-## Fonts
+```bash
+npm run build    # compile a production build
+npm start        # serve it on http://localhost:3000
+```
 
-The design specifies two **proprietary** typefaces:
+The committed repo builds from a clean clone with no extra steps — the generated icon
+components and the product imagery are all checked in.
 
-- **Gilroy** — body and headings
-- **TT Norms Pro** — the Checkout button
+### Other scripts
 
-Both are commercial fonts that require a paid **webfont license** to self-host, and
-**we do not currently hold that license**, so the real font files are **not shipped
-in this repo**. A Figma design that uses Gilroy does not grant the right to use it —
-the license must be purchased separately (e.g. via [MyFonts](https://www.myfonts.com),
-[Fontspring](https://www.fontspring.com), or the type designer).
+| Script              | What it does                                                     |
+| ------------------- | ---------------------------------------------------------------- |
+| `npm run lint`      | ESLint                                                           |
+| `npm run typecheck` | `tsc --noEmit`                                                   |
+| `npm run format`    | Prettier write (`format:check` to verify only)                   |
+| `npm run icons`     | Regenerate typed icon components from SVGs (see [Icons](#icons)) |
 
-**In the meantime, the entire app uses a single free stand-in: [Manrope](https://fonts.google.com/specimen/Manrope)**,
-a close geometric-sans match to Gilroy, loaded via [`next/font`](https://nextjs.org/docs/app/api-reference/components/font)
-and exposed through one app-wide CSS variable, `--font-primary`, which every text
-style reads.
+A Husky **pre-commit** hook runs format → lint → typecheck → build so nothing broken lands.
 
-### Switching to the licensed fonts
+---
 
-Once the webfont license is purchased and you have the `.woff2` files:
+## What's implemented
 
-1. Add the files under `src/fonts/` (e.g. `src/fonts/gilroy/Gilroy-*.woff2`).
-2. In `src/app/layout.tsx`, swap the `next/font/google` Manrope import for a
-   `next/font/local` call pointing at those files.
-3. Keep the same `variable` name (`--font-primary`). Nothing else in the app
-   needs to change. (If you also want TT Norms Pro on the Checkout button, add a
-   second local font on its own variable and point `Button.tsx` at it.)
+Everything in the requirements, plus the backend bonus:
 
-## Icons
+- **4-step accordion** — Step 1 open on load; steps expand/collapse; each header shows
+  "STEP X OF 4", icon, title, and a right-side state indicator ("_N_ selected" + chevron).
+  Each open step ends with a **Next: …** button that advances.
+- **Product cards** — image, title, description, "Learn More", optional discount **badge**,
+  **variant/color selector**, **quantity stepper**, and struck-through compare-at + active
+  price. Cards with qty > 0 render in the **selected** (highlighted-border) state. Only the
+  elements a given product actually has are rendered — all driven from data.
+- **Variant selector with per-variant quantities** — Red and Blue of the same product are
+  tracked separately. The card's stepper is bound to the **active** variant (select Blue and
+  it shows Blue's count, leaving your Red count untouched). The review panel shows **every
+  variant with count > 0 as its own line**.
+- **Steppers kept in sync** — the card stepper and the review-panel line stepper edit the
+  same underlying count; changing one updates the other and the total live.
+- **Live review panel** — grouped line items (Cameras / Sensors / Accessories / Plan), a
+  shipping row, satisfaction badge, financing line, **total** (with pre-discount strike-through),
+  savings callout, **Checkout** button, and **Save my system for later**.
+- **Persistence** — "Save my system for later" writes the configuration to `localStorage`.
+  Configure → save → reload/return → it's restored exactly.
+- **Responsive** — matches the Figma on desktop and stays usable down to a phone.
+- **Backend bonus** — the catalog is served from a simulated backend behind `GET /api/catalog`
+  and product imagery behind `GET /api/assets/[...path]` (details below).
 
-Icons are **generated** from source SVGs into typed React components — you never
-hand-write an icon component. Drop an SVG in, run one command, and it becomes a
-fully-typed `<Icon name="…" />`.
+---
 
-### Adding an icon
+## How it's structured
 
-1. Drop the SVG into `public/assets/icons/`, named in kebab-case
-   (e.g. `carrot-down.svg` → the name `"carrot-down"`).
-2. Run the generator:
+```
+src/
+  app/
+    page.tsx                      # server component: loads catalog, renders the builder
+    layout.tsx                    # app-wide font + globals
+    api/catalog/route.ts          # GET /api/catalog  (serves the JSON catalog)
+    api/assets/[...path]/route.ts # GET /api/assets/… (serves product imagery)
+  server/                         # simulated backend — walled off with `server-only`
+    catalog/catalog.json          #   the product catalog (single source of truth)
+    catalog/getCatalog.ts         #   the one reader, wrapped in React.cache
+    catalog/assets/…              #   product + variant images (served via the API, not /public)
+  features/bundle-builder/
+    components/builder/           # accordion, product cards, variant chips, steppers
+    components/review/            # summary groups, line items, shipping, checkout
+    store/                        # reducer state, provider, selectors, persistence
+    data/structure.ts             # the 4-step structure (which category feeds which step)
+    types.ts                      # Product / Variant / catalog types
+    DESIGN.md                     # Figma design spec captured for offline reference
+  components/ui/                  # reusable primitives: Button, Badge, PriceTag, QtyStepper, Icon…
+```
 
-   ```bash
-   npm run icons
-   ```
+### Data flow
 
-3. Use it anywhere — the name is autocompleted and type-checked:
-
-   ```tsx
-   import { Icon } from "@/components/ui/icon";
-
-   <Icon name="camera" size={30} />
-   <Icon name="camera" color="currentColor" className="text-obsidian" />
-   ```
-
-### How it works
-
-`npm run icons` runs `scripts/generate-icons.mjs`, which for every SVG in
-`public/assets/icons/`:
-
-- emits a typed component into `src/components/ui/icon/generated/`, and
-- rebuilds `src/components/ui/icon/registry.ts` — the name → component map that
-  gives `<Icon name=… />` its typo-proof `IconName` union.
-
-Each icon takes a `size` prop (defaults to the SVG's intrinsic size; a `className`
-size utility like `size-6` still wins via CSS) and a `color` prop wired to the
-icon's primary color — pass `color="currentColor"` to inherit a Tailwind `text-*`
-class. Secondary colors stay fixed. Components spread `{...props}` (no `forwardRef` —
-this repo is on React 19, where `ref` is an ordinary prop).
-
-The generator is **idempotent**: it fully overwrites `generated/` and `registry.ts`
-on each run, so deleted SVGs drop out cleanly. The hand-written files (`types.ts`,
-`Icon.tsx`, `index.ts`) are never touched — don't edit anything under `generated/`.
-
-## Bundle Builder
-
-The app is a Wyze security-system bundle builder: a 4-step accordion for
-picking cameras/plan/sensors/accessories, feeding a review panel with a
-line-item summary and checkout total. Design source: `src/features/bundle-builder/DESIGN.md`.
-
-### Simulated backend
-
-`src/server/` stands in for a real backend/CMS, and is walled off from the
-client by Next's `server-only` import:
-
-- `src/server/catalog/catalog.json` — the product catalog (source of truth).
-- `src/server/catalog/getCatalog.ts` — the one place that reads it, wrapped in
-  `React.cache`. Swapping in a real database later means changing only this
-  function.
-- `GET /api/catalog` (`src/app/api/catalog/route.ts`) — serves the catalog as
-  JSON; statically prerendered since the data doesn't change per request.
-- `GET /api/assets/[...path]` — serves product imagery from
-  `src/server/catalog/assets/` (not `/public`), so images come from the same
-  simulated backend as the catalog API.
+`catalog.json` is the source of truth. `getCatalog()` (wrapped in `React.cache`) is the **one
+place** that reads it — swapping in a real database later means changing only that function.
+`page.tsx` loads the catalog on the server and hands it to the client tree; the same loader
+backs `GET /api/catalog`. Initial bundle state is **seeded from the catalog** so the app loads
+looking exactly like the design (including the pre-populated sensors, accessory, and plan).
 
 ### State & persistence
 
-`src/features/bundle-builder/store/` holds a reducer-based bundle state
-(`state.ts`) seeded from the catalog, exposed via `BundleProvider` /
-`useBundle`. "Save my system for later" persists explicitly to
-`localStorage` on click (`store/persistence.ts`) rather than on every change,
-so a saved bundle survives a reload and takes precedence over the catalog
-seed. Derived values (line items, totals, savings) live in `store/selectors.ts`.
+`store/` holds a reducer-based bundle state (`state.ts`) exposed via `BundleProvider` /
+`useBundle`. Derived values (line items, totals, savings) live in `store/selectors.ts`.
+"Save my system for later" persists **explicitly on click** to `localStorage`
+(`store/persistence.ts`) rather than on every keystroke; a saved bundle survives a reload and
+takes precedence over the catalog seed.
 
-### Review panel
+---
 
-`src/features/bundle-builder/components/review/` renders the order summary:
-`SummaryGroup`/`SummaryLineItem` for the grouped line items,
-`ShippingLineItem` for the shipping row, `SatisfactionBadge` and
-`CheckoutButton` for the right-hand checkout column.
+## Notable decisions & tradeoffs
 
-## Learn More
+- **Fonts are a free stand-in.** The design specifies two **proprietary, license-required**
+  typefaces — **Gilroy** (body/headings) and **TT Norms Pro** (Checkout button) — which can't be
+  shipped without a purchased webfont license. The whole app therefore uses **[Manrope](https://fonts.google.com/specimen/Manrope)**
+  (a close geometric-sans match) via `next/font`, exposed through one CSS variable,
+  `--font-primary`, that every text style reads. **Switching to the licensed fonts** later is a
+  local change: drop the `.woff2` files under `src/fonts/`, swap the `next/font/google` import in
+  `layout.tsx` for a `next/font/local` one keeping the same `--font-primary` variable — nothing
+  else changes.
 
-To learn more about Next.js, take a look at the following resources:
+- **Backend is simulated, not a separate service.** Rather than stand up a real server, the
+  catalog and imagery are served from `src/server/` (fenced off from the client by Next's
+  `server-only` import) through Next Route Handlers. This satisfies the "serve the JSON from a
+  backend" bonus while keeping the repo a single `npm install && npm run dev`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Images come from the API, not `/public`.** Product images live under
+  `src/server/catalog/assets/` and are served via `GET /api/assets/…`, so imagery originates from
+  the same simulated backend as the catalog — closer to how a real CMS would serve assets.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Icons are generated, never hand-written.** See [Icons](#icons) — this keeps `<Icon name=… />`
+  typo-proof via a generated `IconName` union.
 
-## Deploy on Vercel
+- **Design fidelity is captured offline.** `DESIGN.md` records the tokens, typography, and
+  per-element specs pulled from Figma once, so development didn't depend on live Figma access.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### How this was built — AI-assisted workflow
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project was built with **Claude Code + the Figma MCP**, driven section by section
+under my direction — not one-shot generated. The loop for each section:
+
+1. **I instructed, Claude planned.** I described the section and how it should be
+   approached, and had Claude generate an **implementation plan** against those
+   instructions (reading the Figma design via the Figma MCP).
+2. **I reviewed the plan.** I read it, left comments and adjustments, and **approved** it
+   before any code was written.
+3. **Delegated implementation.** Once approved, I delegated the actual component
+   implementation to Claude, building from my instructions and the design.
+4. **I reviewed before shipping.** Every change was **reviewed by me** before it landed.
+5. **Guardrails in CI.** A **Husky pre-commit pipeline** (format → lint → typecheck →
+   build) enforces the code guidelines automatically, so nothing that violates them can be
+   committed.
+
+The result: I stayed the reviewer and decision-maker on every section — architecture,
+plan, and final code — while Claude handled drafting and implementation within those
+guardrails.
+
+### Known limitations
+
+- **Checkout is a placeholder** — the prototype has nowhere to check out to, as the spec allows.
+- **Selected-variant chip highlighting is intentionally minimal** — the spec explicitly deprioritized
+  chip highlight styling in favor of the selection-and-quantity behavior, which is fully wired.
+- Fonts differ from the licensed design until the license is acquired (see above).
+
+---
+
+## Icons
+
+Icons are **generated** from source SVGs into typed React components.
+
+1. Drop a kebab-case SVG into `public/assets/icons/` (e.g. `carrot-down.svg` → name `"carrot-down"`).
+2. Run `npm run icons` (`scripts/generate-icons.mjs`).
+3. Use it: `<Icon name="camera" size={30} />` — the name is autocompleted and type-checked.
+
+The generator is idempotent: it overwrites `src/components/ui/icon/generated/` and rebuilds
+`registry.ts` on each run, so deleted SVGs drop out cleanly. Don't edit anything under
+`generated/`. (Icons on React 19 spread `{...props}` with no `forwardRef` — `ref` is an ordinary
+prop.) Generated icons are committed, so a clean clone builds without running this step.
