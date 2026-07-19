@@ -9,6 +9,7 @@ import {
   useReducer,
   useRef,
   useState,
+  useSyncExternalStore,
 } from "react";
 import {
   makeBundleReducer,
@@ -33,6 +34,16 @@ interface BundleContextValue {
 
 const BundleContext = createContext<BundleContextValue | null>(null);
 
+// Hydration flag via useSyncExternalStore: the value never changes after mount,
+// so `subscribe` is a no-op. The server snapshot is `false` and the client
+// snapshot is `true`, so `hydrated` is `false` on the server and the first
+// client render (matching markup) and flips to `true` once mounted — without
+// calling setState inside an effect. Defined at module scope so the function
+// identities stay stable across renders and never trigger re-subscription.
+const subscribeHydrated = () => () => {};
+const getHydratedClientSnapshot = () => true;
+const getHydratedServerSnapshot = () => false;
+
 export function BundleProvider({
   catalog,
   children,
@@ -51,13 +62,13 @@ export function BundleProvider({
     undefined,
     () => loadState() ?? seededState(catalog),
   );
-  const [hydrated, setHydrated] = useState(false);
+  const hydrated = useSyncExternalStore(
+    subscribeHydrated,
+    getHydratedClientSnapshot,
+    getHydratedServerSnapshot,
+  );
   const [justSaved, setJustSaved] = useState(false);
   const savedTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    setHydrated(true);
-  }, []);
 
   const save = useCallback(() => {
     if (saveState(state)) {

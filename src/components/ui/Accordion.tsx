@@ -50,6 +50,8 @@ export function Accordion({
   const bodyId = `${uid}-body`;
   const Heading = `h${headingLevel}` as const;
 
+  // comment
+
   return (
     <div className={cn(className)}>
       <Heading className="m-0">
@@ -59,7 +61,10 @@ export function Accordion({
           onClick={onToggle}
           aria-expanded={open}
           aria-controls={bodyId}
-          className={cn("block w-full cursor-pointer text-left", triggerClassName)}
+          className={cn(
+            "block w-full cursor-pointer text-left",
+            triggerClassName,
+          )}
         >
           {header}
         </button>

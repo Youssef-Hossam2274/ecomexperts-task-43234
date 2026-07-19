@@ -16,7 +16,11 @@ interface ColorSwatchChipProps {
  * (`save-green`) border and a faint mint fill; inactive chips get a plain grey
  * border on white.
  */
-export function ColorSwatchChip({ variant, active, onSelect }: ColorSwatchChipProps) {
+export function ColorSwatchChip({
+  variant,
+  active,
+  onSelect,
+}: ColorSwatchChipProps) {
   return (
     <button
       type="button"

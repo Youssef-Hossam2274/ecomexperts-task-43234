@@ -25,7 +25,10 @@ export async function GET(
   const resolved = path.normalize(path.join(ASSETS_ROOT, ...segments));
 
   // Guard against path traversal escaping the assets root (e.g. "../../..").
-  if (resolved !== ASSETS_ROOT && !resolved.startsWith(ASSETS_ROOT + path.sep)) {
+  if (
+    resolved !== ASSETS_ROOT &&
+    !resolved.startsWith(ASSETS_ROOT + path.sep)
+  ) {
     return new Response("Not found", { status: 404 });
   }
 

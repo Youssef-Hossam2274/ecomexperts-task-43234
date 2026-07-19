@@ -1,0 +1,13 @@
+# Build output & caches
+.next/
+out/
+build/
+node_modules/
+
+# Lockfiles & generated types
+package-lock.json
+next-env.d.ts
+tsconfig.tsbuildinfo
+
+# Generated icon components (SVGR output — see scripts/generate-icons.mjs)
+src/components/ui/icon/generated/

@@ -1,0 +1,21 @@
+set -e
+
+echo "🎨 [1/4] Formatting with Prettier..."
+# Remember which files are staged so we can re-stage them after formatting.
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACMR)
+npm run format
+# Re-stage the originally-staged files that Prettier may have reformatted.
+if [ -n "$STAGED_FILES" ]; then
+  echo "$STAGED_FILES" | xargs -r git add
+fi
+
+echo "🔍 [2/4] Linting..."
+npm run lint
+
+echo "🧠 [3/4] Type-checking..."
+npm run typecheck
+
+echo "🏗️  [4/4] Building..."
+npm run build
+
+echo "✅ All checks passed — proceeding with commit."
