@@ -24,6 +24,9 @@
   --color-step-label: #484848;
   --color-strike-red: #d8392b;
   --color-save-green: #0aa288;
+  /* Faint mint fill behind the active variant chip (Figma rgba(29,240,187,0.04),
+     nudged up slightly so it's perceptible on white). */
+  --color-swatch-active: rgba(29, 240, 187, 0.06);
   --color-panel: #edf4ff;
   --color-link-blue: #0000ee;
 

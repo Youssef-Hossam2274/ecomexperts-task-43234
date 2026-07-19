@@ -14,18 +14,17 @@
         {
           "id": "white",
           "label": "White",
-          "hex": "#ffffff",
-          "highlightBorder": true
+          "swatch": "/assets/products/variants/cam-v4-white.png"
         },
         {
           "id": "grey",
           "label": "Grey",
-          "hex": "#9aa0a6"
+          "swatch": "/assets/products/variants/cam-v4-grey.png"
         },
         {
           "id": "black",
           "label": "Black",
-          "hex": "#1f1f1f"
+          "swatch": "/assets/products/variants/cam-v4-black.png"
         }
       ]
     },
@@ -43,13 +42,12 @@
         {
           "id": "white",
           "label": "White",
-          "hex": "#ffffff",
-          "highlightBorder": true
+          "swatch": "/assets/products/variants/cam-pan-v3-white.png"
         },
         {
           "id": "black",
           "label": "Black",
-          "hex": "#1f1f1f"
+          "swatch": "/assets/products/variants/cam-pan-v3-black.png"
         }
       ]
     },
@@ -67,13 +65,12 @@
         {
           "id": "white",
           "label": "White",
-          "hex": "#ffffff",
-          "highlightBorder": true
+          "swatch": "/assets/products/variants/floodlight-v2-white.png"
         },
         {
           "id": "black",
           "label": "Black",
-          "hex": "#1f1f1f"
+          "swatch": "/assets/products/variants/floodlight-v2-black.png"
         }
       ]
     },
@@ -98,13 +95,12 @@
         {
           "id": "white",
           "label": "White",
-          "hex": "#ffffff",
-          "highlightBorder": true
+          "swatch": "/assets/products/variants/battery-cam-pro-white.png"
         },
         {
           "id": "black",
           "label": "Black",
-          "hex": "#1f1f1f"
+          "swatch": "/assets/products/variants/battery-cam-pro-black.png"
         }
       ]
     },

@@ -29,6 +29,10 @@ export const getCatalog = cache(async (): Promise<ProductCatalog> => {
     products: catalog.products.map((product) => ({
       ...product,
       image: toAssetUrl(product.image),
+      variants: product.variants?.map((variant) => ({
+        ...variant,
+        swatch: toAssetUrl(variant.swatch),
+      })),
     })),
   };
 });

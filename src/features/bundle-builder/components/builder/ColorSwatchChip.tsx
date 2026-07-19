@@ -11,38 +11,29 @@ interface ColorSwatchChipProps {
 }
 
 /**
- * Selectable colour chip: a small swatch (thumbnail if provided, else a
- * colour dot from `hex`) plus the label. The "White" chip carries a green
- * border per the design; the active chip gets a subtle purple ring.
- * (Selected-state styling is intentionally light — see REQUIREMENTS.)
+ * Selectable colour chip ("Label paints" in Figma `68:9830`): a 22px swatch
+ * thumbnail plus the colour label. The active chip is drawn with a teal
+ * (`save-green`) border and a faint mint fill; inactive chips get a plain grey
+ * border on white.
  */
 export function ColorSwatchChip({ variant, active, onSelect }: ColorSwatchChipProps) {
-  const border = active
-    ? "border-wyze-purple"
-    : variant.highlightBorder
-      ? "border-save-green"
-      : "border-gray-400";
-
   return (
     <button
       type="button"
       onClick={onSelect}
       aria-pressed={active}
-      className={`inline-flex h-[26px] items-center gap-1.5 rounded-[2px] border px-2 transition-colors ${border}`}
+      className={`inline-flex h-[26px] items-center justify-center gap-1.5 rounded-chip border-[0.5px] px-[3px] transition-colors ${
+        active
+          ? "border-save-green bg-swatch-active"
+          : "border-gray-400 bg-white"
+      }`}
     >
-      {variant.swatch ? (
-        <SafeImage
-          src={variant.swatch}
-          alt=""
-          wrapperClassName="size-[15px] rounded-full"
-        />
-      ) : (
-        <span
-          aria-hidden
-          className="size-[15px] rounded-full border border-gray-400/70"
-          style={{ backgroundColor: variant.hex }}
-        />
-      )}
+      <SafeImage
+        src={variant.swatch}
+        alt=""
+        className="object-cover"
+        wrapperClassName="size-[22px] rounded-[2px]"
+      />
       <Typography as="span" variant="L3" color="ink">
         {variant.label}
       </Typography>

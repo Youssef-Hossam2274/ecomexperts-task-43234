@@ -14,12 +14,8 @@ export type CategoryId = "cameras" | "plan" | "sensors" | "accessories";
 export interface Variant {
   id: string;
   label: string;
-  /** Fallback swatch colour when no thumbnail image is supplied. */
-  hex: string;
-  /** Optional per-variant thumbnail (defaults to the product image). */
-  swatch?: string;
-  /** Draw the chip with a green-tinted border (the "White" chip in Figma). */
-  highlightBorder?: boolean;
+  /** Per-variant swatch thumbnail shown in the colour chip. */
+  swatch: string;
 }
 
 export interface Product {

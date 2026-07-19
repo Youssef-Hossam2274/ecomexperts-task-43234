@@ -41,17 +41,21 @@ export function BundleProvider({
   children: React.ReactNode;
 }) {
   const reducer = useMemo(() => makeBundleReducer(catalog), [catalog]);
-  // SSR-safe: start from the deterministic seed, then restore on the client.
-  const [state, dispatch] = useReducer(reducer, undefined, () =>
-    seededState(catalog),
+  // Single init decision: a saved system wins over the catalog seed.
+  // `loadState()` is SSR-guarded (returns null when there's no `window`), so
+  // the server — and the very first client render — start from the seed. We
+  // hold the subtree back until `hydrated` so any saved system is swapped in
+  // on mount without a hydration mismatch (see the gate on `children` below).
+  const [state, dispatch] = useReducer(
+    reducer,
+    undefined,
+    () => loadState() ?? seededState(catalog),
   );
   const [hydrated, setHydrated] = useState(false);
   const [justSaved, setJustSaved] = useState(false);
   const savedTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    const saved = loadState();
-    if (saved) dispatch({ type: "hydrate", state: saved });
     setHydrated(true);
   }, []);
 
@@ -77,7 +81,12 @@ export function BundleProvider({
 
   return (
     <CatalogProvider catalog={catalog}>
-      <BundleContext.Provider value={value}>{children}</BundleContext.Provider>
+      <BundleContext.Provider value={value}>
+        {/* Server + first client render start from the seed; hold the subtree
+            until mount so a saved system swaps in without a hydration
+            mismatch. `hydrated` is still exposed for consumers that care. */}
+        {hydrated ? children : null}
+      </BundleContext.Provider>
     </CatalogProvider>
   );
 }

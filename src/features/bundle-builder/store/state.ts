@@ -16,7 +16,6 @@ export type BundleAction =
   | { type: "decrement"; productId: string; variantId: string }
   | { type: "selectVariant"; productId: string; variantId: string }
   | { type: "toggleStep"; stepId: string }
-  | { type: "hydrate"; state: BundleState }
   | { type: "reset" };
 
 /** Build the initial state from the catalog seed (deterministic — used for
@@ -90,8 +89,6 @@ export function makeBundleReducer(catalog: ProductCatalog) {
           ...state,
           openStep: state.openStep === action.stepId ? null : action.stepId,
         };
-      case "hydrate":
-        return action.state;
       case "reset":
         return seededState(catalog);
       default:
